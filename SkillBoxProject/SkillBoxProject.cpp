@@ -5,8 +5,14 @@
 #include <string>
 #include <algorithm>
 #include <regex>
+#include <unordered_map>
 
 using namespace std;
+
+
+void bot(string text) {
+    cout << " [BOT]: "<<text<<endl;
+}
 
 void to_lower(string& str) {
     transform(str.begin(), str.end(), str.begin(), ::tolower);
@@ -17,21 +23,34 @@ string to_lower2(string str) {
     return str;
 }
 
+string user() {
+    string question;
+    cout << "[USER]: ";
+    getline(cin, question);
+    question = to_lower2(question);
+    return question;
+}
+
 int main()
 {
-    string question;
-    cout << "Hello, welcome to AUTOMATED SUPERBOT 3000, PLEASE ASK ANY QUESTIONS:\n";
-    cin >> question;
-    if (regex_match(question, regex(".*hello.*"))) {
-        cout << "Hi, how are you?\n";
-    }
-    if (regex_match(question, regex(".*how are you.*"))) {
-        cout << "I'm good\n";
-    }    
-    if (regex_match(question, regex(".*what is your name.*"))) {
-        cout << " My name is AUTOMATED SUPERBOT 3000\n";
-    }
+    unordered_map<string, string> database = {
+        {"hello", "Oh, hello to you, hooman"},
+        {"how are you", "I'm good"},
+        {"what is your name","AUTOMATED SUPERBOT 3000"},
+    };
 
+    string question;
+    bot("Hello, welcome to AUTOMATED SUPERBOT 3000, please ask any questions:");
+    while (question.compare("exit")!=0) {
+        question = user();
+        for (auto entry : database) {
+            auto expression = regex(".*" + entry.first + ".*");
+            if (regex_match(question, expression)) {
+                bot(entry.second);
+            }
+
+        }
+    }
     return 0;
 }
 
